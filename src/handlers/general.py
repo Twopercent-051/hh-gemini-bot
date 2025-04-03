@@ -51,7 +51,7 @@ async def send_respond_clb_handler(callback: CallbackQuery, state: FSMContext):
     vacancy_id = callback.data.split(":")[1]
     respond = await RespondsRedis.get(key=vacancy_id)
     if not respond:
-        await send_error_notification(code=0, text="Respond not found")
+        await send_error_notification(code=0, text="Respond not found", method="send_respond_clb_handler")
         return
     await VacancyHh.respond(vacancy_id=vacancy_id, message=respond)
     await callback.message.delete()

@@ -51,7 +51,7 @@ class AuthHh(__BaseHh):
                 response_data = response.json()
                 return HhAuthModel(**response_data)
             else:
-                await send_error_notification(text=response.text, code=response.status_code)
+                await send_error_notification(text=response.text, code=response.status_code, method="auth")
 
     @classmethod
     async def with_code(cls, code: str) -> HhAuthModel | None:
@@ -90,7 +90,7 @@ class ResumeHh(__BaseHh):
                     skills=response_data["skill_set"],
                 )
             else:
-                await send_error_notification(text=response.text, code=response.status_code)
+                await send_error_notification(text=response.text, code=response.status_code, method="resume")
 
 
 class VacancyHh(__BaseHh):
@@ -117,7 +117,7 @@ class VacancyHh(__BaseHh):
                     result.append(vacancy)
                 return result
             else:
-                await send_error_notification(text=response.text, code=response.status_code)
+                await send_error_notification(text=response.text, code=response.status_code, method="vacancies")
                 return []
 
     @classmethod
@@ -136,7 +136,7 @@ class VacancyHh(__BaseHh):
                     employer="",
                 )
             else:
-                await send_error_notification(text=response.text, code=response.status_code)
+                await send_error_notification(text=response.text, code=response.status_code, method="vacancy")
 
     @classmethod
     @with_headers()
@@ -146,7 +146,7 @@ class VacancyHh(__BaseHh):
         async with httpx.AsyncClient() as client:
             response = await client.post(url=url, data=data, headers=headers)
             if response.status_code != 201:
-                await send_error_notification(text=response.text, code=response.status_code)
+                await send_error_notification(text=response.text, code=response.status_code, method="respond")
 
 
 if __name__ == "__main__":

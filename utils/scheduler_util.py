@@ -20,8 +20,8 @@ async def __get_new_vacancies():
 async def create_task():
     scheduler.add_job(
         func=__get_new_vacancies,
-        trigger="cron",
-        minute=10,
+        trigger="interval",
+        minutes=10,
         misfire_grace_time=None,
     )
 

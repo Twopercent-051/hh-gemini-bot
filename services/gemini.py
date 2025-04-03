@@ -17,6 +17,8 @@ async def generate_respond(prompt: str):
                 result = response_json["candidates"][0]["content"]["parts"][0]["text"]
                 return result
             except (KeyError, IndexError):
-                await send_error_notification(code=response.status_code, text="Ошибка сериализации ответа")
+                await send_error_notification(
+                    code=response.status_code, text="Ошибка сериализации ответа", method="gemini"
+                )
         else:
-            await send_error_notification(text=response.text, code=response.status_code)
+            await send_error_notification(text=response.text, code=response.status_code, method="gemini")
