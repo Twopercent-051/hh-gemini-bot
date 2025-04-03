@@ -1,0 +1,11 @@
+image: docker:latest
+stages:
+  - deploy
+deploy:
+  stage: deploy
+  script:
+    - echo "$ENV_FILE" > .env
+    - docker-compose -f docker-compose.yml up -d --build
+    - docker ps -a
+  only:
+    - main

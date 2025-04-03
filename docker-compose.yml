@@ -1,0 +1,26 @@
+services:
+
+  redis:
+    image: redis:7
+    container_name: hh_redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+  bot:
+    image: hh_bot
+    container_name: hh_bot
+    stop_signal: SIGINT
+    build:
+      context: .
+    logging:
+      options:
+        max-file: "5"
+        max-size: "3m"
+    command: python3 -m main
+    restart: unless-stopped
+    depends_on:
+      - redis
+
+volumes:
+  redis_data:
