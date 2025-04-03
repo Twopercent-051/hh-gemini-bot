@@ -42,6 +42,7 @@ class HhResumeModel(BaseModel):
 class HhVacancyModel(BaseModel):
     id: int
     title: str
+    employer: str
     description: str
     url: str
 

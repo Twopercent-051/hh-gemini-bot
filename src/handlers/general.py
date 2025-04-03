@@ -36,6 +36,8 @@ async def create_respond_handler(callback: CallbackQuery, state: FSMContext):
     respond += (
         "\n\nВы можете связаться со мной в Телеграм @two_percent или по электронной почте twopercent051@yandex.ru"
     )
+    edited_text = "❗️ Отклик отправлен\n\n" + respond
+    await callback.message.edit_text(text=edited_text, reply_markup=None)
     kb = VacanciesInline.respond_kb(vacancy_id=vacancy_id)
     await RespondsRedis.set(key=vacancy_id, value=respond)
     await state.set_state(RespondFSM.text)
@@ -52,8 +54,8 @@ async def send_respond_clb_handler(callback: CallbackQuery, state: FSMContext):
         await send_error_notification(code=0, text="Respond not found")
         return
     await VacancyHh.respond(vacancy_id=vacancy_id, message=respond)
+    await callback.message.delete()
     await state.clear()
-    # await callback.message.answer(text=f"КАК БУДТО ОТПРАВИЛИ\n\n<code>{respond}</code>")
     await callback.answer()
 
 
@@ -63,4 +65,9 @@ async def send_respond_msg_handler(message: Message, state: FSMContext):
     vacancy_id = await state.get_data()
     await VacancyHh.respond(vacancy_id=vacancy_id, message=respond)
     await state.clear()
-    # await message.answer(text=f"КАК БУДТО ОТПРАВИЛИ\n\n<code>{respond}</code>")
+
+
+@router.callback_query(F.data == "skip")
+async def skip_respond_clb_handler(callback: CallbackQuery):
+    await callback.message.delete()
+    await callback.answer()

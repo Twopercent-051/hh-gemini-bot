@@ -112,6 +112,7 @@ class VacancyHh(__BaseHh):
                         title=item["name"],
                         description="\n".join(filtered_description),
                         url=item["alternate_url"],
+                        employer=item["employer"]["name"],
                     )
                     result.append(vacancy)
                 return result
@@ -132,6 +133,7 @@ class VacancyHh(__BaseHh):
                     title=response_data["name"],
                     description=response_data["description"],
                     url=response_data["alternate_url"],
+                    employer="",
                 )
             else:
                 await send_error_notification(text=response.text, code=response.status_code)
@@ -148,4 +150,4 @@ class VacancyHh(__BaseHh):
 
 
 if __name__ == "__main__":
-    asyncio.run(ResumeHh.get_one_or_none())
+    asyncio.run(VacancyHh.get_all())

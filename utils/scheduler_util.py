@@ -7,8 +7,6 @@ from src.notifications import send_vacancy_notification
 
 
 async def __get_new_vacancies():
-    # print(type(VacancyHh.get_all()))
-    # return
     vacancies = await VacancyHh.get_all()
     for vacancy in vacancies:
         cache_vacancy = await VacancyRedis.get(key=vacancy.id)

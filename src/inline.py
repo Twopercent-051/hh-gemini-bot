@@ -10,6 +10,7 @@ class VacanciesInline:
         kb = [
             [InlineKeyboardButton(text="👀 Посмотреть", url=vacancy.url)],
             [InlineKeyboardButton(text="Сформировать отклик", callback_data=f"respond:{vacancy.id}")],
+            [InlineKeyboardButton(text="❌ Не интересно", callback_data="skip")],
         ]
         return InlineKeyboardMarkup(inline_keyboard=kb)
 
