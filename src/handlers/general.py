@@ -30,7 +30,8 @@ async def create_respond_handler(callback: CallbackQuery, state: FSMContext):
     prompt = (
         f"Моё резюме: {resume.title}, описание: {resume.description}, мои навыки: {resume.skills}. "
         f"Напиши короткий (до 3000 символов) отклик на вакансию {vacancy.title} с требованиями "
-        f"{vacancy.description}"
+        f"{vacancy.description}. Только если в вакансии требуется показать свой Github или Gitlab, то напиши что "
+        f"я не могу этого сделать поскольку соблюдаю коммерческую тайну"
     )
     respond = await generate_respond(prompt=prompt)
     respond += (
