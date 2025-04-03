@@ -37,7 +37,7 @@ async def create_respond_handler(callback: CallbackQuery, state: FSMContext):
     respond += (
         "\n\nВы можете связаться со мной в Телеграм @two_percent или по электронной почте twopercent051@yandex.ru"
     )
-    edited_text = "❗️ Отклик отправлен\n\n" + respond
+    edited_text = "❗️ Отклик отправлен\n\n" + callback.message.text
     await callback.message.edit_text(text=edited_text, reply_markup=None)
     kb = VacanciesInline.respond_kb(vacancy_id=vacancy_id)
     await RespondsRedis.set(key=vacancy_id, value=respond)
