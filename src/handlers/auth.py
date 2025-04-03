@@ -49,7 +49,7 @@ async def auth_tokens_handler(message: Message, state: FSMContext):
         text = "Нужно ввести два ключа через Enter"
         await message.answer(text=text)
         return
-    await AccessTokenRedis.set(value=access_token, expire=3600 * 3)
+    await AccessTokenRedis.set(value=access_token, expire=1209599)
     await RefreshTokenRedis.set(value=refresh_token)
     await state.clear()
     await message.answer(text=text)

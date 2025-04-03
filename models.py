@@ -14,11 +14,6 @@ class HhAuthModel(BaseModel):
     expires_in: int
     token_type: str = "bearer"
 
-    @staticmethod
-    @field_validator("expires_in", mode="before")
-    def adjust_expires_in(v):
-        return int(v * 0.8) if v else 0
-
 
 class HhResumeModel(BaseModel):
     id: str
