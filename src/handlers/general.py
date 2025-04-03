@@ -27,17 +27,19 @@ async def create_respond_handler(callback: CallbackQuery, state: FSMContext):
     vacancy = await VacancyHh.get_one_or_none(vacancy_id=vacancy_id)
     if not resume or not vacancy:
         return
-    prompt = (f"Моё резюме: {resume.title}, описание: {resume.description}, мои навыки: {resume.skills}. "
-              f"Напиши короткий (до 3000 символов) отклик на вакансию {vacancy.title} с требованиями "
-              f"{vacancy.description}")
+    prompt = (
+        f"Моё резюме: {resume.title}, описание: {resume.description}, мои навыки: {resume.skills}. "
+        f"Напиши короткий (до 3000 символов) отклик на вакансию {vacancy.title} с требованиями "
+        f"{vacancy.description}"
+    )
     respond = await generate_respond(prompt=prompt)
-    respond += "\n\nВы можете связаться со мной в Телеграм @two_percent или по электронной почте twopercent051@yandex.ru"
+    respond += (
+        "\n\nВы можете связаться со мной в Телеграм @two_percent или по электронной почте twopercent051@yandex.ru"
+    )
     kb = VacanciesInline.respond_kb(vacancy_id=vacancy_id)
     await RespondsRedis.set(key=vacancy_id, value=respond)
     await state.set_state(RespondFSM.text)
-    await state.update_data(
-        vacancy_id=vacancy_id
-    )
+    await state.update_data(vacancy_id=vacancy_id)
     await callback.message.answer(text=f"<code>{respond}</code>", reply_markup=kb)
     await callback.answer()
 
@@ -54,6 +56,7 @@ async def send_respond_clb_handler(callback: CallbackQuery, state: FSMContext):
     # await callback.message.answer(text=f"КАК БУДТО ОТПРАВИЛИ\n\n<code>{respond}</code>")
     await callback.answer()
 
+
 @router.message(F.text, RespondFSM.text)
 async def send_respond_msg_handler(message: Message, state: FSMContext):
     respond = message.text
@@ -61,5 +64,3 @@ async def send_respond_msg_handler(message: Message, state: FSMContext):
     await VacancyHh.respond(vacancy_id=vacancy_id, message=respond)
     await state.clear()
     # await message.answer(text=f"КАК БУДТО ОТПРАВИЛИ\n\n<code>{respond}</code>")
-
-

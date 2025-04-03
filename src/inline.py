@@ -7,8 +7,10 @@ class VacanciesInline:
 
     @staticmethod
     def vacancy_kb(vacancy: HhVacancyModel):
-        kb = [[InlineKeyboardButton(text="👀 Посмотреть", url=vacancy.url)],
-              [InlineKeyboardButton(text="Сформировать отклик", callback_data=f"respond:{vacancy.id}")]]
+        kb = [
+            [InlineKeyboardButton(text="👀 Посмотреть", url=vacancy.url)],
+            [InlineKeyboardButton(text="Сформировать отклик", callback_data=f"respond:{vacancy.id}")],
+        ]
         return InlineKeyboardMarkup(inline_keyboard=kb)
 
     @staticmethod

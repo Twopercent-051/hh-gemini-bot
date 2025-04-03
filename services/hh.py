@@ -9,14 +9,6 @@ from models import HhAuthModel, HhResumeModel, HhVacancyModel
 from src.notifications import send_error_notification
 
 
-
-
-
-
-
-
-
-
 def with_headers(with_bearer: bool = True):
     def decorator(func):
         @wraps(func)
@@ -38,7 +30,6 @@ def with_headers(with_bearer: bool = True):
         return wrapper
 
     return decorator
-
 
 
 class __BaseHh:
@@ -68,7 +59,7 @@ class AuthHh(__BaseHh):
             "grant_type": "authorization_code",
             "client_id": cls.client_id,
             "client_secret": cls.client_secret,
-            "code": code
+            "code": code,
         }
         return await cls.__auth_request(data=data)
 
@@ -92,13 +83,17 @@ class ResumeHh(__BaseHh):
             response = await client.get(url=url, headers=headers)
             if response.status_code == 200:
                 response_data = response.json()
-                return HhResumeModel(id=config.hh.resume_id,title=response_data["title"], description=response_data["skills"], skills=response_data["skill_set"])
+                return HhResumeModel(
+                    id=config.hh.resume_id,
+                    title=response_data["title"],
+                    description=response_data["skills"],
+                    skills=response_data["skill_set"],
+                )
             else:
                 await send_error_notification(text=response.text, code=response.status_code)
 
 
 class VacancyHh(__BaseHh):
-
 
     @classmethod
     @with_headers()
@@ -112,7 +107,12 @@ class VacancyHh(__BaseHh):
                 for item in response_data["items"]:
                     description = [item["snippet"]["responsibility"], item["snippet"]["requirement"]]
                     filtered_description = filter(None, description)
-                    vacancy = HhVacancyModel(id=item["id"], title=item["name"], description="\n".join(filtered_description), url=item["alternate_url"])
+                    vacancy = HhVacancyModel(
+                        id=item["id"],
+                        title=item["name"],
+                        description="\n".join(filtered_description),
+                        url=item["alternate_url"],
+                    )
                     result.append(vacancy)
                 return result
             else:
@@ -127,7 +127,12 @@ class VacancyHh(__BaseHh):
             response = await client.get(url=url, headers=headers)
             if response.status_code == 200:
                 response_data = response.json()
-                return HhVacancyModel(id=vacancy_id, title=response_data["name"], description=response_data["description"], url=response_data["alternate_url"])
+                return HhVacancyModel(
+                    id=vacancy_id,
+                    title=response_data["name"],
+                    description=response_data["description"],
+                    url=response_data["alternate_url"],
+                )
             else:
                 await send_error_notification(text=response.text, code=response.status_code)
 

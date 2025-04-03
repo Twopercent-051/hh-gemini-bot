@@ -12,4 +12,3 @@ async def send_vacancy_notification(vacancy: HhVacancyModel):
     text = f"💡 <u>{vacancy.title}</u>\n\n<i>{vacancy.description}</i>"
     kb = VacanciesInline.vacancy_kb(vacancy=vacancy)
     await bot.send_message(chat_id=config.bot.admin_id, text=text, reply_markup=kb)
-

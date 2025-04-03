@@ -12,15 +12,17 @@ router = Router()
 
 @router.message(Command("auth_code"))
 async def start_auth_code_handler(message: Message, state: FSMContext):
-    text = ("Введи код аутентификации. Как получить написано "
-            "<a href='https://api.hh.ru/openapi/redoc#section/Avtorizaciya/Avtorizaciya-polzovatelya'>тут</a>")
+    text = (
+        "Введи код аутентификации. Как получить написано "
+        "<a href='https://api.hh.ru/openapi/redoc#section/Avtorizaciya/Avtorizaciya-polzovatelya'>тут</a>"
+    )
     await state.set_state(AuthFSM.code)
     await message.answer(text=text)
 
 
 @router.message(Command("auth_tokens"))
 async def start_auth_tokens_handler(message: Message, state: FSMContext):
-    text=  "Введите <i>access_token</i> и <i>refresh_token</i> через Enter"
+    text = "Введите <i>access_token</i> и <i>refresh_token</i> через Enter"
     await state.set_state(AuthFSM.tokens)
     await message.answer(text=text)
 
@@ -47,7 +49,7 @@ async def auth_tokens_handler(message: Message, state: FSMContext):
         text = "Нужно ввести два ключа через Enter"
         await message.answer(text=text)
         return
-    await AccessTokenRedis.set(value=access_token, expire=3600*3)
+    await AccessTokenRedis.set(value=access_token, expire=3600 * 3)
     await RefreshTokenRedis.set(value=refresh_token)
     await state.clear()
     await message.answer(text=text)

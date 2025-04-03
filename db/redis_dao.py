@@ -1,10 +1,6 @@
-
 import redis.asyncio as redis
 
 from config import config
-
-
-
 
 
 class __BaseRedis:
@@ -22,23 +18,23 @@ class __BaseRedis:
         return response.decode("utf-8")
 
     @classmethod
-    async def set(cls, value: str, key: str="",  expire: int | None = None):
-        await cls.redis_instance.set(
-            name=f"{cls.prefix}_{key}",
-            value=value,
-            ex=expire or cls.expire
-        )
+    async def set(cls, value: str, key: str = "", expire: int | None = None):
+        await cls.redis_instance.set(name=f"{cls.prefix}_{key}", value=value, ex=expire or cls.expire)
+
 
 class AccessTokenRedis(__BaseRedis):
     prefix = "accesses_token"
 
+
 class RefreshTokenRedis(__BaseRedis):
     prefix = "refresh_token"
 
+
 class VacancyRedis(__BaseRedis):
     prefix = "vacancies"
-    expire = 3600*24*3
+    expire = 3600 * 24 * 3
+
 
 class RespondsRedis(__BaseRedis):
     prefix = "responds"
-    expire = 3600*24*3
+    expire = 3600 * 24 * 3

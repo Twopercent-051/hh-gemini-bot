@@ -1,10 +1,11 @@
 from bs4 import BeautifulSoup
 from pydantic import BaseModel, field_validator
 
+
 def clean_text_with_bs4(text):
-    soup = BeautifulSoup(text, 'html.parser')
+    soup = BeautifulSoup(text, "html.parser")
     clean = soup.get_text()
-    return ' '.join(clean.split())
+    return " ".join(clean.split())
 
 
 class HhAuthModel(BaseModel):
@@ -17,7 +18,6 @@ class HhAuthModel(BaseModel):
     @field_validator("expires_in", mode="before")
     def adjust_expires_in(v):
         return int(v * 0.8) if v else 0
-
 
 
 class HhResumeModel(BaseModel):
