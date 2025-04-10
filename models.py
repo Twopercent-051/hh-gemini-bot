@@ -40,6 +40,9 @@ class HhVacancyModel(BaseModel):
     employer: str
     description: str
     url: str
+    area: str
+    work_format: str
+    has_test: bool
 
     @staticmethod
     @field_validator("title", mode="before")

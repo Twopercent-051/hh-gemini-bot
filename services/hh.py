@@ -107,12 +107,16 @@ class VacancyHh(__BaseHh):
                 for item in response_data["items"]:
                     description = [item["snippet"]["responsibility"], item["snippet"]["requirement"]]
                     filtered_description = filter(None, description)
+                    work_format = ", ".join(item["work_format"]["name"]) if item["work_format"]["name"] else ""
                     vacancy = HhVacancyModel(
                         id=item["id"],
                         title=item["name"],
                         description="\n".join(filtered_description),
                         url=item["alternate_url"],
                         employer=item["employer"]["name"],
+                        area=item["area"]["name"],
+                        work_format=work_format,
+                        has_test=item["has_test"],
                     )
                     result.append(vacancy)
                 return result
@@ -134,6 +138,9 @@ class VacancyHh(__BaseHh):
                     description=response_data["description"],
                     url=response_data["alternate_url"],
                     employer="",
+                    area="",
+                    work_format="",
+                    has_test=False,
                 )
             else:
                 await send_error_notification(text=response.text, code=response.status_code, method="vacancy")

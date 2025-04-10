@@ -9,6 +9,10 @@ async def send_error_notification(code: int, text: str, method: str):
 
 
 async def send_vacancy_notification(vacancy: HhVacancyModel):
-    text = f"💡 <u>{vacancy.title}</u>\n<i>{vacancy.employer}</i>\n\n<i>{vacancy.description}</i>"
+    test_text = "❗️ ЕСТЬ ТЕСТОВОЕ\n\n" if vacancy.has_test else ""
+    text = (
+        f"{test_text}💡 <u>{vacancy.title}</u>\n<i>{vacancy.employer} "
+        f"({vacancy.area})</i>\n{vacancy.work_format}\n\n<i>{vacancy.description}</i>"
+    )
     kb = VacanciesInline.vacancy_kb(vacancy=vacancy)
     await bot.send_message(chat_id=config.bot.admin_id, text=text, reply_markup=kb)
