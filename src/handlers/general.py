@@ -30,16 +30,16 @@ async def create_respond_handler(callback: CallbackQuery, state: FSMContext):
     prompt = (
         f"Моё резюме: {resume.title}, описание: {resume.description}, мои навыки: {resume.skills}. "
         f"Напиши короткий (до 3000 символов) отклик на вакансию {vacancy.title} с требованиями "
-        f"{vacancy.description}. Только если в вакансии требуется показать свой Github или Gitlab, то напиши что "
-        f"я не могу этого сделать поскольку соблюдаю коммерческую тайну. Никогда не добавляй в текст что-то, что "
+        f"{vacancy.description}. Если в вакансии требуется показать свой Github или Gitlab, то пришли вот этот "
+        f"аккаунт https://github.com/twopercent051?tab=repositories. Уточни, что там находятся тестовые задание "
+        f"(некоммерческие). Если спрашивают про ожидаемую зарплату, то скажи 80000 рублей (с возможностью пересмотра "
+        f"через несколько месяцев). Никогда не добавляй в текст что-то, что "
         f"требует ручной вставки (например С уважением,[Ваше Имя]). Придерживайся инфо-стиля"
     )
     respond = await generate_respond(prompt=prompt)
     respond += (
         "\n\nВы можете связаться со мной в Телеграм @two_percent или по электронной почте twopercent051@yandex.ru"
     )
-    # edited_text = "❗️ Отклик отправлен\n\n" + callback.message.text
-    # await callback.message.edit_text(text=edited_text, reply_markup=None)
     await callback.message.delete()
     kb = VacanciesInline.respond_kb(vacancy_id=vacancy_id)
     await RespondsRedis.set(key=vacancy_id, value=respond)
