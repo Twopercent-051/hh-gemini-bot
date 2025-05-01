@@ -14,7 +14,7 @@ class __BaseRedis:
     async def get(cls, key: str = "") -> str | None:
         response = await cls.redis_instance.get(name=f"{cls.prefix}_{key}")
         if not response:
-            return
+            return None
         return response.decode("utf-8")
 
     @classmethod

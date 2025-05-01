@@ -6,8 +6,6 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 env_file = os.path.join(PROJECT_ROOT, ".env")
 
-print(env_file)
-
 
 class BotConfig(BaseSettings):
     bot_token: str
@@ -32,7 +30,8 @@ class HhConfig(BaseSettings):
     app_title: str
     client_id: str
     client_secret: str
-    resume_id: str
+    backend_resume_id: str
+    devops_resume_id: str
     model_config = SettingsConfigDict(
         env_file=env_file,
         env_file_encoding="utf-8",

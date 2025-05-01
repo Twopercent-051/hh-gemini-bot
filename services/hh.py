@@ -12,7 +12,7 @@ from src.notifications import send_error_notification
 def with_headers(with_bearer: bool = True):
     def decorator(func):
         @wraps(func)
-        async def wrapper(*args, **kwargs):  # args включает cls/c
+        async def wrapper(*args, **kwargs):
             headers = {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "HH-User-Agent": f"{config.hh.app_title}/1.0",
@@ -50,8 +50,8 @@ class AuthHh(__BaseHh):
             if response.status_code == 200:
                 response_data = response.json()
                 return HhAuthModel(**response_data)
-            else:
-                await send_error_notification(text=response.text, code=response.status_code, method="auth")
+            await send_error_notification(text=response.text, code=response.status_code, method="auth")
+            return None
 
     @classmethod
     async def with_code(cls, code: str) -> HhAuthModel | None:
@@ -77,28 +77,28 @@ class ResumeHh(__BaseHh):
 
     @classmethod
     @with_headers()
-    async def get_one_or_none(cls, headers: dict[str, str]) -> HhResumeModel | None:
-        url = f"https://api.hh.ru/resumes/{config.hh.resume_id}"
+    async def get_one_or_none(cls, resume_id: str, headers: dict[str, str]) -> HhResumeModel | None:
+        url = f"https://api.hh.ru/resumes/{resume_id}"
         async with httpx.AsyncClient() as client:
             response = await client.get(url=url, headers=headers)
             if response.status_code == 200:
                 response_data = response.json()
                 return HhResumeModel(
-                    id=config.hh.resume_id,
+                    id=resume_id,
                     title=response_data["title"],
                     description=response_data["skills"],
                     skills=response_data["skill_set"],
                 )
-            else:
-                await send_error_notification(text=response.text, code=response.status_code, method="resume")
+            await send_error_notification(text=response.text, code=response.status_code, method="resume")
+            return None
 
 
 class VacancyHh(__BaseHh):
 
     @classmethod
     @with_headers()
-    async def get_all(cls, headers: dict[str, str]) -> list[HhVacancyModel]:
-        url = f"https://api.hh.ru/resumes/{config.hh.resume_id}/similar_vacancies"
+    async def get_all(cls, resume_id: str, headers: dict[str, str]) -> list[HhVacancyModel]:
+        url = f"https://api.hh.ru/resumes/{resume_id}/similar_vacancies"
         async with httpx.AsyncClient() as client:
             response = await client.get(url=url, headers=headers, params={"per_page": 100, "period": 2})
             if response.status_code == 200:
@@ -142,14 +142,14 @@ class VacancyHh(__BaseHh):
                     work_format="",
                     has_test=False,
                 )
-            else:
-                await send_error_notification(text=response.text, code=response.status_code, method="vacancy")
+            await send_error_notification(text=response.text, code=response.status_code, method="vacancy")
+            return None
 
     @classmethod
     @with_headers()
-    async def respond(cls, vacancy_id, message: str, headers: dict[str, str]):
+    async def respond(cls, resume_id: str, vacancy_id: int, message: str, headers: dict[str, str]):
         url = "https://api.hh.ru/negotiations"
-        data = {"message": message, "vacancy_id": vacancy_id, "resume_id": config.hh.resume_id}
+        data = {"message": message, "vacancy_id": vacancy_id, "resume_id": resume_id}
         async with httpx.AsyncClient() as client:
             response = await client.post(url=url, data=data, headers=headers)
             if response.status_code != 201:
