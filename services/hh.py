@@ -4,6 +4,7 @@ from functools import wraps
 import httpx
 
 from config import config
+from create_bot import logger
 from db.redis_dao import AccessTokenRedis, RefreshTokenRedis
 from models import HhAuthModel, HhResumeModel, HhVacancyModel
 from src.notifications import send_error_notification
@@ -83,6 +84,7 @@ class ResumeHh(__BaseHh):
             response = await client.get(url=url, headers=headers)
             if response.status_code == 200:
                 response_data = response.json()
+                logger.info(response_data)
                 return HhResumeModel(
                     id=resume_id,
                     title=response_data["title"],
