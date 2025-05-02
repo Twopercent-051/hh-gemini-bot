@@ -38,6 +38,12 @@ class __BaseHh:
     client_id = config.hh.client_id
     client_secret = config.hh.client_secret
 
+    @staticmethod
+    async def _drop_access_token(response: httpx.Response, method: str):
+        if response.status_code in [410, 403]:
+            await AccessTokenRedis.delete()
+        await send_error_notification(text=response.text, code=response.status_code, method=method)
+
 
 class AuthHh(__BaseHh):
 
@@ -51,7 +57,7 @@ class AuthHh(__BaseHh):
             if response.status_code == 200:
                 response_data = response.json()
                 return HhAuthModel(**response_data)
-            await send_error_notification(text=response.text, code=response.status_code, method="auth")
+            await cls._drop_access_token(response=response, method="auth")
             return None
 
     @classmethod
@@ -91,7 +97,7 @@ class ResumeHh(__BaseHh):
                     description=response_data["skills"],
                     skills=response_data["skill_set"],
                 )
-            await send_error_notification(text=response.text, code=response.status_code, method="resume")
+            await cls._drop_access_token(response=response, method="resume")
             return None
 
 
@@ -123,7 +129,7 @@ class VacancyHh(__BaseHh):
                     result.append(vacancy)
                 return result
             else:
-                await send_error_notification(text=response.text, code=response.status_code, method="vacancies")
+                await cls._drop_access_token(response=response, method="vacancies")
                 return []
 
     @classmethod
@@ -144,7 +150,7 @@ class VacancyHh(__BaseHh):
                     work_format="",
                     has_test=False,
                 )
-            await send_error_notification(text=response.text, code=response.status_code, method="vacancy")
+            await cls._drop_access_token(response=response, method="vacancy")
             return None
 
     @classmethod
@@ -155,7 +161,7 @@ class VacancyHh(__BaseHh):
         async with httpx.AsyncClient() as client:
             response = await client.post(url=url, data=data, headers=headers)
             if response.status_code != 201:
-                await send_error_notification(text=response.text, code=response.status_code, method="respond")
+                await cls._drop_access_token(response=response, method="respond")
 
 
 if __name__ == "__main__":

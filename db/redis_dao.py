@@ -21,6 +21,10 @@ class __BaseRedis:
     async def set(cls, value: str, key: str = "", expire: int | None = None):
         await cls.redis_instance.set(name=f"{cls.prefix}_{key}", value=value, ex=expire or cls.expire)
 
+    @classmethod
+    async def delete(cls, key: str = ""):
+        await cls.redis_instance.delete(f"{cls.prefix}_{key}")
+
 
 class AccessTokenRedis(__BaseRedis):
     prefix = "accesses_token"
