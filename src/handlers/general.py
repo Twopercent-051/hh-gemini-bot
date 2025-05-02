@@ -32,14 +32,18 @@ async def create_respond_handler(callback: CallbackQuery):
     prompt = (
         f"Моё резюме: {resume.title}, описание: {resume.description}, мои навыки: {resume.skills}. "
         f"Напиши короткий (до 2000 символов) отклик на вакансию {vacancy.title} с требованиями "
-        f"{vacancy.description}. Если в вакансии требуется показать свой Github или Gitlab, то пришли вот этот "
-        f"аккаунт https://github.com/twopercent051?tab=repositories. Никогда не добавляй в текст что-то, что "
+        f"{vacancy.description}. Никогда не добавляй в текст что-то, что "
         f"требует ручной вставки (например С уважением,[Ваше Имя]). Придерживайся инфо-стиля"
     )
     respond = await generate_respond(prompt=prompt)
-    respond += (
-        "\n\nВы можете связаться со мной в Телеграм @two_percent или по электронной почте twopercent051@yandex.ru"
+    ps_text = (
+        "\nPS Если вам показалось, что этот отклик написан нейросетью, то так и есть. Я действительно сделал "
+        "Телеграм-бот для генерации и отправки откликов на вакансии с помощью Gemini "
+        "https://github.com/Twopercent-051/hh-gemini-bot\nВсё оттого, что я не SMM-менеджер и не умею писать "
+        'под каждую вакансию "продающий" отклик. Зато умею и люблю писать работающие приложения и максимально '
+        "автоматизировать работу."
     )
+    respond += ps_text
     await callback.message.delete()
     kb = VacanciesInline.respond_kb(vacancy_id=vacancy_id)
     await RespondsRedis.set(key=vacancy_id, value=respond)
