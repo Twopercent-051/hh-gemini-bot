@@ -37,13 +37,14 @@ async def create_respond_handler(callback: CallbackQuery):
     )
     respond = await generate_respond(prompt=prompt)
     ps_text = (
-        "\nPS Если вам показалось, что этот отклик написан нейросетью, то так и есть. Я действительно сделал "
+        "\n\nPS Если вам показалось, что этот отклик написан нейросетью, то так и есть. Я действительно сделал "
         "Телеграм-бот для генерации и отправки откликов на вакансии с помощью Gemini "
         "https://github.com/Twopercent-051/hh-gemini-bot\nВсё оттого, что я не SMM-менеджер и не умею писать "
         'под каждую вакансию "продающий" отклик. Зато умею и люблю писать работающие приложения и максимально '
         "автоматизировать работу."
     )
     respond += ps_text
+    respond = respond.replace("\n\n\n", "\n\n")
     await callback.message.delete()
     kb = VacanciesInline.respond_kb(vacancy_id=vacancy_id)
     await RespondsRedis.set(key=vacancy_id, value=respond)
