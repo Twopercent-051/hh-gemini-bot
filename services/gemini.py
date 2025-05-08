@@ -4,7 +4,7 @@ from config import config
 from src.notifications import send_error_notification
 
 
-async def generate_respond(prompt: str):
+async def generate_respond(prompt: str) -> str | None:
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={config.gemini.api_key}"
     headers = {"Content-Type": "application/json"}
     data = {"contents": [{"parts": [{"text": prompt}]}]}
@@ -20,5 +20,7 @@ async def generate_respond(prompt: str):
                 await send_error_notification(
                     code=response.status_code, text="Ошибка сериализации ответа", method="gemini"
                 )
+                return None
         else:
             await send_error_notification(text=response.text, code=response.status_code, method="gemini")
+            return None

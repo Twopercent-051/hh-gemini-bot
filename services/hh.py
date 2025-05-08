@@ -40,8 +40,10 @@ class __BaseHh:
 
     @staticmethod
     async def _drop_access_token(response: httpx.Response, method: str):
-        if response.status_code in [410, 403]:
-            await AccessTokenRedis.delete()
+        if response.status_code in [401, 403]:
+            auth_data = await AuthHh.with_refresh_token()
+            await AccessTokenRedis.set(value=auth_data.access_token, expire=auth_data.expires_in)
+            await RefreshTokenRedis.set(value=auth_data.refresh_token)
         await send_error_notification(text=response.text, code=response.status_code, method=method)
 
 
