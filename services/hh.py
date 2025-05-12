@@ -163,6 +163,8 @@ class VacancyHh(__BaseHh):
         async with httpx.AsyncClient() as client:
             response = await client.post(url=url, data=data, headers=headers)
             if response.status_code != 201:
+                logger.error(response.text)
+            if response.status_code in [401, 403]:
                 await cls._drop_access_token(response=response, method="respond")
 
 
