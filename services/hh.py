@@ -167,6 +167,7 @@ class VacancyHh(__BaseHh):
                 error_types = [i.get("type", "") for i in error_value]
                 if "negotiations" in error_types:
                     await send_error_notification(code=response.status_code, text=response.text, method="respond")
+                    return
                 await cls._drop_access_token(response=response, method="respond")
 
 
