@@ -162,9 +162,11 @@ class VacancyHh(__BaseHh):
         data = {"message": message, "vacancy_id": vacancy_id, "resume_id": resume_id}
         async with httpx.AsyncClient() as client:
             response = await client.post(url=url, data=data, headers=headers)
-            if response.status_code != 201:
-                logger.error(response.text)
             if response.status_code in [401, 403]:
+                error_value = response.json().get("errors", [])
+                error_types = [i.get("type", "") for i in error_value]
+                if "negotiations" in error_types:
+                    await send_error_notification(code=response.status_code, text=response.text, method="respond")
                 await cls._drop_access_token(response=response, method="respond")
 
 
