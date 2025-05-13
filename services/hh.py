@@ -150,7 +150,7 @@ class VacancyHh(__BaseHh):
                     employer="",
                     area="",
                     work_format="",
-                    has_test=False,
+                    has_test=response_data["has_test"],
                 )
             await cls._drop_access_token(response=response, method="vacancy")
             return None
