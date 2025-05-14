@@ -38,13 +38,14 @@ async def create_respond_handler(callback: CallbackQuery):
     respond = await generate_respond(prompt=prompt)
     if respond and not vacancy.has_test:
         await callback.message.delete()
-    ps_text = (
-        "\n\nPS Если вам показалось, что этот отклик написан нейросетью, то так и есть. Я действительно сделал "
-        "Телеграм-бот для генерации и отправки откликов на вакансии с помощью Gemini "
-        "https://github.com/Twopercent-051/hh-gemini-bot\nВсё оттого, что я не SMM-менеджер и не умею писать "
-        'под каждую вакансию "продающий" отклик. Зато умею и люблю писать работающие приложения и максимально '
-        "автоматизировать работу."
-    )
+    # ps_text = (
+    #     "\n\nPS Если вам показалось, что этот отклик написан нейросетью, то так и есть. Я действительно сделал "
+    #     "Телеграм-бот для генерации и отправки откликов на вакансии с помощью Gemini "
+    #     "https://github.com/Twopercent-051/hh-gemini-bot\nВсё оттого, что я не SMM-менеджер и не умею писать "
+    #     'под каждую вакансию "продающий" отклик. Зато умею и люблю писать работающие приложения и максимально '
+    #     "автоматизировать работу."
+    # )
+    ps_text = "Мой Telegram для связи @two_percent"
     respond += ps_text
     respond = respond.replace("\n\n\n", "\n\n")
     kb = VacanciesInline.respond_kb(vacancy_id=vacancy_id) if not vacancy.has_test else None
