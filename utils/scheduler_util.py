@@ -8,7 +8,10 @@ from src.notifications import send_vacancy_notification
 
 
 async def __get_new_vacancies():
-    resume_ids = {"backend": config.hh.backend_resume_id, "devops": config.hh.devops_resume_id}
+    resume_ids = {
+        "backend": config.hh.backend_resume_id,
+        # "devops": config.hh.devops_resume_id
+    }
     for resume_title, resume_id in resume_ids.items():
         vacancies = await VacancyHh.get_all(resume_id=resume_id)
         for vacancy in vacancies:
