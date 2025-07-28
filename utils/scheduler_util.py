@@ -30,7 +30,3 @@ async def create_task():
         minutes=10,
         misfire_grace_time=None,
     )
-
-
-if __name__ == "__main__":
-    asyncio.run(__get_new_vacancies())
